@@ -1,0 +1,309 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Tabuada extends HttpServlet {
+protected void service(HttpServletRequest request,
+HttpServletResponse response) throws ServletException, IOException
+{
+response.setContentType("text/html;charset=UTF-8");
+PrintWriter out = response.getWriter(); 
+
+out.println("<html>");
+out.println("<head>");
+out.println("<title> Tabuada 1 a 9 <title>");
+out.println("</head>");
+out.println("<body>");
+out.println("<table border='1'>");
+out.println("<tr>");
+out.println("<th>Numero</th>");
+out.println("<th>Tabuada</th>");
+out.println("</tr>");
+
+for (int num=1; num<10; num++){
+out.println("<tr>");
+out.println("<td>" + num + "</td>");
+out.println("<td>");
+
+for (int mult = 1; mult <= 10; mult++) {
+int resul = num * mult;
+out.println(num + " x " + mult + " = " + resul + "<br>");
+}
+
+out.println("</td>");
+out.println("</tr>");
+}
+
+out.println("</table>");
+out.println("</body>");
+out.println("</html>");
+}
+}
+
+
+2.Escreva um Servlet que recebe como argumento um inteiro (enviada através de um formulário), e imprime no HTML resposta a tabuada desse número específico;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/TabuadaServlet")
+public class TabuadaServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Obtenha o número da solicitação do parâmetro "numero"
+        String numeroStr = request.getParameter("numero");
+        
+        try {
+            int numero = Integer.parseInt(numeroStr);
+
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Tabuada de Multiplicação</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Tabuada de Multiplicação do Número " + numero + "</h1>");
+            out.println("<table border='1'>");
+            out.println("<tr>");
+            out.println("<th>Multiplicador</th>");
+            out.println("<th>Resultado</th>");
+            out.println("</tr>");
+
+for (int multiplicador = 1; multiplicador <= 10; multiplicador++) {
+
+int resultado = numero * multiplicador;
+out.println("<tr>");
+out.println("<td>" + multiplicador + "</td>");
+out.println("<td>" + resultado + "</td>");
+out.println("</tr>");
+}
+
+out.println("</table>");
+out.println("</body>");
+out.println("</html>");
+
+}
+catch (NumberFormatException e) {
+out.println("<html>");
+out.println("<head>");
+out.println("<title>Erro</title>");
+out.println("</head>");
+out.println("<body>");
+out.println("<h1>Erro: O valor fornecido não é um número inteiro válido.</h1>");
+out.println("</body>");
+out.println("</html>");
+        }
+    }
+}
+
+
+3.Crie um formulário HTML para aceitar o nome de login e a senha, verifique o nome de
+login e a senha autorizados por meio de Servlet no lado do servidor e exiba a mensagem
+apropriada.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulário de Login</title>
+</head>
+<body>
+    <h1>Formulário de Login</h1>
+    <form action="/SeuProjeto/LoginServlet" method="post">
+        <label for="login">Nome de Login:</label>
+        <input type="text" id="login" name="login" required><br><br>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required><br><br>
+
+        <input type="submit" value="Entrar">
+    </form>
+</body>
+</html>
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Obter valores do formulário
+        String login = request.getParameter("login");
+        String senha = request.getParameter("senha");
+
+        // Verificar as credenciais (neste exemplo, login="admin" e senha="password")
+        if ("admin".equals(login) && "password".equals(senha)) {
+            out.println("<html><body>");
+            out.println("<h1>Login bem-sucedido!</h1>");
+            out.println("</body></html>");
+        } else {
+            out.println("<html><body>");
+            out.println("<h1>Login falhou. Verifique o nome de login e senha.</h1>");
+            out.println("</body></html>");
+        }
+    }
+}
+
+
+4.Escreva um servlet que receba um valor de campo de entrada de texto e retorne o
+comprimento da string que foi inserida nesse campo junto com um campo de entrada de texto
+para que o usuário possa inserir imediatamente o próximo valor.
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/ContadorStringServlet")
+public class ContadorStringServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Obtenha o valor do campo de entrada de texto
+        String entradaTexto = request.getParameter("entradaTexto");
+        
+        // Calcule o comprimento da string inserida
+        int comprimento = entradaTexto.length();
+
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Contador de Comprimento de String</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>Comprimento da String inserida: " + comprimento + "</h1>");
+
+        // Campo de entrada de texto para inserir o próximo valor
+        out.println("<form action='/SeuProjeto/ContadorStringServlet' method='post'>");
+        out.println("<label for='entradaTexto'>Insira uma nova String:</label>");
+        out.println("<input type='text' id='entradaTexto' name='entradaTexto' required><br><br>");
+        out.println("<input type='submit' value='Calcular Comprimento'>");
+        out.println("</form>");
+
+        out.println("</body>");
+        out.println("</html>");
+    }
+}
+
+
+5. Escreva um servlet que escolha um número aleatório entre 1 e 100 e permita ao usuário
+fazer uma série de suposições para encontrá-lo. Em cada palpite o servlet deve informar se o
+palpite foi maior, menor ou igual e reportar o número de palpites até o momento.
+(fazer uso de sessão para armazenar o valor antes de cada pergunta)
+Sessão em Servlet: (HttpSession session = request.getSession();
+session.setAttribute("user", "Pankaj");
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Random;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/AdivinhacaoServlet")
+public class AdivinhacaoServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Obter a sessão
+        HttpSession session = request.getSession();
+
+        // Verificar se é o início do jogo (primeira tentativa)
+        if (session.getAttribute("numeroSecreto") == null) {
+            // Gerar um número secreto aleatório entre 1 e 100
+            Random random = new Random();
+            int numeroSecreto = random.nextInt(100) + 1;
+
+            // Armazenar o número secreto na sessão
+            session.setAttribute("numeroSecreto", numeroSecreto);
+
+            // Inicializar o contador de palpites
+            session.setAttribute("contadorPalpites", 0);
+        }
+
+        // Recuperar o número secreto da sessão
+        int numeroSecreto = (int) session.getAttribute("numeroSecreto");
+
+        // Recuperar o contador de palpites da sessão
+        int contadorPalpites = (int) session.getAttribute("contadorPalpites");
+
+        // Obter o palpite do usuário a partir dos parâmetros da solicitação
+        String palpiteStr = request.getParameter("palpite");
+
+        if (palpiteStr != null && !palpiteStr.isEmpty()) {
+            int palpite = Integer.parseInt(palpiteStr);
+            contadorPalpites++;
+
+            String mensagem;
+
+            if (palpite == numeroSecreto) {
+                mensagem = "Parabéns! Você adivinhou o número correto em " + contadorPalpites + " palpites.";
+                session.invalidate(); // Finalizar a sessão
+            } else if (palpite < numeroSecreto) {
+                mensagem = "Tente um número maior.";
+            } else {
+                mensagem = "Tente um número menor.";
+            }
+
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Jogo de Adivinhação</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Jogo de Adivinhação</h1>");
+            out.println("<p>" + mensagem + "</p>");
+            out.println("<form action='/SeuProjeto/AdivinhacaoServlet' method='get'>");
+            out.println("<label for='palpite'>Faça um palpite: </label>");
+            out.println("<input type='number' id='palpite' name='palpite' required>");
+            out.println("<input type='submit' value='Enviar Palpite'>");
+            out.println("</form>");
+            out.println("</body>");
+            out.println("</html>");
+        } else {
+            // Página inicial do jogo
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Jogo de Adivinhação</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Jogo de Adivinhação</h1>");
+            out.println("<p>Tente adivinhar um número entre 1 e 100.</p>");
+            out.println("<form action='/SeuProjeto/AdivinhacaoServlet' method='get'>");
+            out.println("<label for='palpite'>Faça um palpite: </label>");
+            out.println("<input type='number' id='palpite' name='palpite' required>");
+            out.println("<input type='submit' value='Enviar Palpite'>");
+            out.println("</form>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+}
